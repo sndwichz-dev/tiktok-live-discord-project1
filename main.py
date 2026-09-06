@@ -13,11 +13,13 @@ client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
 notified = False
 
 def send_discord(message):
-    if DISCORD_WEBHOOK_2:  # make sure secret exists
+    if DISCORD_WEBHOOK_2:  # only send if secret exists
         requests.post(
             DISCORD_WEBHOOK_2,
             json={"content": message},
             timeout=10
+        )
+
         )
 
 @client.on(ConnectEvent)
