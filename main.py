@@ -6,22 +6,19 @@ from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent
 
 TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")
-DISCORD_WEBHOOKS = [os.getenv("DISCORD_WEBHOOK"),
-`                 os.getenv("DISCORD_WEBHOOK_2")]
+DISCORD_WEBHOOK_2 = os.getenv("DISCORD_WEBHOOK_2") 
 
 client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
 
 notified = False
 
-
 def send_discord(message):
-    requests.post(
-        DISCORD_WEBHOOK,
-        DISCORD_WEBHOOK_2
-        json={"content": message},
-        timeout=10
-    )
-
+    if DISCORD_WEBHOOK_2:  # make sure secret exists
+        requests.post(
+            DISCORD_WEBHOOK_2,
+            json={"content": message},
+            timeout=10
+        )
 
 @client.on(ConnectEvent)
 async def on_connect(event: ConnectEvent):
@@ -29,12 +26,13 @@ async def on_connect(event: ConnectEvent):
 
     if not notified:
         message = (
-            f"🔴 **{TIKTOK_USERNAME} is LIVE on TikTok!**\n\n"
-            f"👉 https://www.tiktok.com/@{TIKTOK_USERNAME}/live"
+            f"**{TIKTOK_USERNAME} is LIVE on TikTok!**\n\n"
+            f"https://www.tiktok.com/@{TIKTOK_USERNAME}/live"
         )
 
         send_discord(message)
         notified = True
+
 
     print(f"Connected to @{TIKTOK_USERNAME}")
 
