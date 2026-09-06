@@ -1,0 +1,27 @@
+name: TikTok Live Discord Notification
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tiktok-live:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Start TikTok monitor
+        env:
+          TIKTOK_USERNAME: ${{ secrets.TIKTOK_USERNAME }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python main.pywq
