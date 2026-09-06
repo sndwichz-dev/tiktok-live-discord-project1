@@ -5,22 +5,26 @@ import requests
 from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent
 
+# Load TikTok username and Discord webhook (channel 2 only)
 TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")
-DISCORD_WEBHOOK_2 = os.getenv("DISCORD_WEBHOOK_2") 
+DISCORD_WEBHOOK_2 = os.getenv("DISCORD_WEBHOOK_2")
 
+# Initialize TikTok client
 client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
 
+# Prevent duplicate notifications
 notified = False
 
 def send_discord(message):
     if DISCORD_WEBHOOK_2:  # only send if secret exists
+        print("Sending message to Discord channel 2...")
         requests.post(
             DISCORD_WEBHOOK_2,
             json={"content": message},
             timeout=10
         )
-
-        )
+    else:
+        print("No Discord webhook found!")
 
 @client.on(ConnectEvent)
 async def on_connect(event: ConnectEvent):
@@ -35,9 +39,7 @@ async def on_connect(event: ConnectEvent):
         send_discord(message)
         notified = True
 
-
     print(f"Connected to @{TIKTOK_USERNAME}")
-
 
 async def main():
     global notified
@@ -45,7 +47,6 @@ async def main():
     while True:
         try:
             is_live = await client.is_live()
-
             print(f"Live status: {is_live}")
 
             if not is_live:
@@ -60,5 +61,6 @@ async def main():
             print(f"Error: {e}")
             await asyncio.sleep(30)
 
+if __name__ == "__main__":
+    asyncio.run(main())
 
-asyncio.run(main())
