@@ -24,4 +24,4 @@ jobs:
         env:
           TIKTOK_USERNAME: ${{ secrets.TIKTOK_USERNAME }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python main.pywq
+        run: python main.py
