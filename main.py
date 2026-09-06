@@ -17,6 +17,7 @@ notified = False
 def send_discord(message):
     requests.post(
         DISCORD_WEBHOOK,
+        DISCORD_WEBHOOK_2
         json={"content": message},
         timeout=10
     )
