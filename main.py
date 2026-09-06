@@ -5,18 +5,19 @@ import requests
 from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent
 
-# Load TikTok username and Discord webhook (single channel only)
-TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")
+# Load TikTok usernames and Discord webhook
+TIKTOK_USERNAME_1 = os.getenv("TIKTOK_USERNAME")
+TIKTOK_USERNAME_2 = os.getenv("TIKTOK_USERNAME_2")
 DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
-# Initialize TikTok client
-client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
+# Put usernames in a list (skip None values)
+USERNAMES = [u for u in [TIKTOK_USERNAME_1, TIKTOK_USERNAME_2] if u]
 
-# Prevent duplicate notifications
-notified = False
+# Prevent duplicate notifications per user
+notified = {username: False for username in USERNAMES}
 
 def send_discord(message):
-    if DISCORD_WEBHOOK:  # only send if secret exists
+    if DISCORD_WEBHOOK:
         print("Sending message to Discord...")
         requests.post(
             DISCORD_WEBHOOK,
@@ -26,34 +27,40 @@ def send_discord(message):
     else:
         print("No Discord webhook found!")
 
-@client.on(ConnectEvent)
-async def on_connect(event: ConnectEvent):
-    global notified
+# Create a client for each TikTok username
+clients = [TikTokLiveClient(unique_id=username) for username in USERNAMES]
 
-    if not notified:
-        message = (
-            f"**{TIKTOK_USERNAME} is LIVE on TikTok!**\n\n"
-            f"https://www.tiktok.com/@{TIKTOK_USERNAME}/live"
-        )
+for client in clients:
+    @client.on(ConnectEvent)
+    async def on_connect(event: ConnectEvent, client=client):
+        username = client.unique_id
+        global notified
 
-        send_discord(message)
-        notified = True
+        if not notified[username]:
+            message = (
+                f"**{username} is LIVE on TikTok!**\n\n"
+                f"https://www.tiktok.com/@{username}/live"
+            )
+            send_discord(message)
+            notified[username] = True
 
-    print(f"Connected to @{TIKTOK_USERNAME}")
+        print(f"Connected to @{username}")
 
 async def main():
     global notified
 
     while True:
         try:
-            is_live = await client.is_live()
-            print(f"Live status: {is_live}")
+            for client in clients:
+                username = client.unique_id
+                is_live = await client.is_live()
+                print(f"Live status for @{username}: {is_live}")
 
-            if not is_live:
-                notified = False
+                if not is_live:
+                    notified[username] = False
 
-            if is_live and not client.connected:
-                await client.connect()
+                if is_live and not client.connected:
+                    await client.connect()
 
             await asyncio.sleep(30)
 
@@ -63,4 +70,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
