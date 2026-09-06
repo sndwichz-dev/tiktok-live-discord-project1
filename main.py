@@ -8,10 +8,11 @@ from TikTokLive.events import ConnectEvent
 # Load TikTok usernames and Discord webhook
 TIKTOK_USERNAME_1 = os.getenv("TIKTOK_USERNAME")
 TIKTOK_USERNAME_2 = os.getenv("TIKTOK_USERNAME_2")
+TIKTOK_USERNAME_3 = os.getenv("TIKTOK_USERNAME_3")
 DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
 # Put usernames in a list (skip None values)
-USERNAMES = [u for u in [TIKTOK_USERNAME_1, TIKTOK_USERNAME_2] if u]
+USERNAMES = [u for u in [TIKTOK_USERNAME_1, TIKTOK_USERNAME_2, TIKTOK_USERNAME_3] if u]
 
 # Prevent duplicate notifications per user
 notified = {username: False for username in USERNAMES}
