@@ -5,9 +5,9 @@ import requests
 from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent
 
-# Load TikTok username and Discord webhook (channel 2 only)
+# Load TikTok username and Discord webhook (single channel only)
 TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")
-DISCORD_WEBHOOK_2 = os.getenv("DISCORD_WEBHOOK_2")
+DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
 # Initialize TikTok client
 client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
@@ -16,10 +16,10 @@ client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
 notified = False
 
 def send_discord(message):
-    if DISCORD_WEBHOOK_2:  # only send if secret exists
-        print("Sending message to Discord channel 2...")
+    if DISCORD_WEBHOOK:  # only send if secret exists
+        print("Sending message to Discord...")
         requests.post(
-            DISCORD_WEBHOOK_2,
+            DISCORD_WEBHOOK,
             json={"content": message},
             timeout=10
         )
