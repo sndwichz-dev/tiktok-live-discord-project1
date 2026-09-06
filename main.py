@@ -6,8 +6,8 @@ from TikTokLive import TikTokLiveClient
 from TikTokLive.events import ConnectEvent
 
 TIKTOK_USERNAME = os.getenv("TIKTOK_USERNAME")
-DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK"),
-os.getenv("DISCORD_WEBHOOK_2")
+DISCORD_WEBHOOKS = [os.getenv("DISCORD_WEBHOOK"),
+`                 os.getenv("DISCORD_WEBHOOK_2")]
 
 client = TikTokLiveClient(unique_id=TIKTOK_USERNAME)
 
