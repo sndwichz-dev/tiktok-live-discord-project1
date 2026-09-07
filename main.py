@@ -70,5 +70,6 @@ async def main():
             await asyncio.sleep(30)
 
 if __name__ == "__main__":
+    # Debug print to confirm usernames loaded
     print("Loaded usernames:", USERNAMES)
     asyncio.run(main())
