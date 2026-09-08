@@ -16,7 +16,7 @@ USERNAMES = [u for u in [TIKTOK_USERNAME_1, TIKTOK_USERNAME_2, TIKTOK_USERNAME_3
 
 # Prevent duplicate notifications per user
 notified = {username: False for username in USERNAMES}
-
+hjadgawdgyag
 def send_discord(message):
     if DISCORD_WEBHOOK:
         print("Sending message to Discord...")
